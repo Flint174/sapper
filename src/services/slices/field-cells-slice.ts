@@ -1,10 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { FieldCell } from "../../utils/cell-types";
-import { FieldDimentions, MINES_AMOUNT } from "../../utils/game-config";
+import { BlockType, FieldCell } from "../../utils/cell-types";
+import {
+  FieldDimentions,
+  FIELD_SIZE,
+  MINES_AMOUNT,
+} from "../../utils/game-config";
 
-const length = FieldDimentions.HEIGHT * FieldDimentions.WIDTH;
 const fieldCellsInitialState: FieldCell[] = Array.from(
-  { length },
+  { length: FIELD_SIZE },
   (_, index) => ({
     index,
     type: "empty",
@@ -30,7 +33,7 @@ const getMatrix = (index: number) => {
       return hOffset < FieldDimentions.WIDTH &&
         hOffset >= 0 &&
         vOffset >= 0 &&
-        lineOffset < length
+        lineOffset < FIELD_SIZE
         ? lineOffset
         : -1;
     })
@@ -41,14 +44,14 @@ export const fieldCellsSlice = createSlice({
   name: "filedCells",
   initialState: fieldCellsInitialState,
   reducers: {
-    newGame: () => fieldCellsInitialState,
+    newField: () => fieldCellsInitialState,
     generateField: (state, action: PayloadAction<FieldCell>) => {
       const { payload: cell } = action;
       const newState: FieldCell[] = state.slice();
       // generate mines
       const mines = new Set<number>([cell.index]);
-      while (mines.size < MINES_AMOUNT) {
-        mines.add(Math.floor(Math.random() * length));
+      while (mines.size <= MINES_AMOUNT) {
+        mines.add(Math.floor(Math.random() * FIELD_SIZE));
       }
       mines.delete(cell.index);
       mines.forEach(
@@ -113,16 +116,40 @@ export const fieldCellsSlice = createSlice({
 
       return newState;
     },
-    blockCell: (state, action: PayloadAction<FieldCell>) => {
-      const { payload: cell } = action;
+    blockCell: (
+      state,
+      action: PayloadAction<{ cell: FieldCell; value: BlockType }>
+    ) => {
+      const {
+        payload: { cell, value },
+      } = action;
 
       if (cell.show !== "hide") return state;
 
       state.splice(cell.index, 1, {
         ...cell,
         block:
-          cell.block === "none" ? "flag" : cell.block === "flag" ? "?" : "none",
+          //   cell.block === "none" ? "flag" : cell.block === "flag" ? "?" : "none",
+          value,
       });
+    },
+    blockCells: (
+      state,
+      action: PayloadAction<{ cells: FieldCell[]; value: BlockType }>
+    ) => {
+      const {
+        payload: { cells, value },
+      } = action;
+
+      const newState = state.slice();
+
+      cells.forEach((cell) => {
+        if (cell.show === "hide") {
+          newState[cell.index] = { ...newState[cell.index], block: value };
+        }
+      });
+
+      return newState;
     },
     revealMines: (state) => {
       return state.map((el) =>
@@ -134,6 +161,12 @@ export const fieldCellsSlice = createSlice({
   },
 });
 
-export const { newGame, generateField, showCell, blockCell, revealMines } =
-  fieldCellsSlice.actions;
+export const {
+  newField,
+  generateField,
+  showCell,
+  blockCell,
+  blockCells,
+  revealMines,
+} = fieldCellsSlice.actions;
 export const fieldCellsReducer = fieldCellsSlice.reducer;

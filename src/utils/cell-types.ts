@@ -11,12 +11,13 @@ export interface NumberCell {
   value: number;
 }
 
-export type CellTypes = MineCell | EmptyCell | NumberCell;
+export type CellType = MineCell | EmptyCell | NumberCell;
+export type BlockType = "none" | "?" | "flag";
 
 export interface CellMeta {
   index: number;
   show: "hide" | "show" | "reveal";
-  block: "none" | "?" | "flag";
+  block: BlockType;
 }
 
-export type FieldCell = CellTypes & CellMeta;
+export type FieldCell = CellType & CellMeta;
