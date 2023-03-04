@@ -29,6 +29,14 @@ const iconsOffsets = {
   FIELD_MINE_ERROR: `${IconsOffsets.CELL_WIDTH * 7}px ${
     IconsOffsets.CELL_ROW_1
   }px`,
+  FIELD_NUM_1: `0 ${IconsOffsets.CELL_ROW_2}px`,
+  FIELD_NUM_2: `${IconsOffsets.CELL_WIDTH}px ${IconsOffsets.CELL_ROW_2}px`,
+  FIELD_NUM_3: `${IconsOffsets.CELL_WIDTH * 2}px ${IconsOffsets.CELL_ROW_2}px`,
+  FIELD_NUM_4: `${IconsOffsets.CELL_WIDTH * 3}px ${IconsOffsets.CELL_ROW_2}px`,
+  FIELD_NUM_5: `${IconsOffsets.CELL_WIDTH * 4}px ${IconsOffsets.CELL_ROW_2}px`,
+  FIELD_NUM_6: `${IconsOffsets.CELL_WIDTH * 5}px ${IconsOffsets.CELL_ROW_2}px`,
+  FIELD_NUM_7: `${IconsOffsets.CELL_WIDTH * 6}px ${IconsOffsets.CELL_ROW_2}px`,
+  FIELD_NUM_8: `${IconsOffsets.CELL_WIDTH * 7}px ${IconsOffsets.CELL_ROW_2}px`,
 };
 
 export const Cell = styled.div<CellProps>`
@@ -53,10 +61,31 @@ export const Cell = styled.div<CellProps>`
       case "show":
         switch (p.type) {
           case "empty":
-            console.log("show empty");
             return iconsOffsets.FIELD_EMPTY;
           case "mine":
             return iconsOffsets.FIELD_MINE_DETONATED;
+          case "number":
+            switch (p.value) {
+              case 1:
+                return iconsOffsets.FIELD_NUM_1;
+              case 2:
+                return iconsOffsets.FIELD_NUM_2;
+              case 3:
+                return iconsOffsets.FIELD_NUM_3;
+              case 4:
+                return iconsOffsets.FIELD_NUM_4;
+              case 5:
+                return iconsOffsets.FIELD_NUM_5;
+              case 6:
+                return iconsOffsets.FIELD_NUM_6;
+              case 7:
+                return iconsOffsets.FIELD_NUM_7;
+              case 8:
+                return iconsOffsets.FIELD_NUM_8;
+
+              default:
+                return iconsOffsets.FIELD_NUM_1;
+            }
           default:
             return iconsOffsets.FIELD_EMPTY;
         }

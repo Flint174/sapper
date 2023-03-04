@@ -2,8 +2,9 @@ import styled from "styled-components";
 import { useAppDispatch, useAppSelector } from "./hooks/use-store";
 import {
   blockCell,
-  generateMines,
+  generateField,
   newGame,
+  revealMines,
   showCell,
 } from "./services/slices/field-cells-slice";
 import { Cell } from "./ui";
@@ -25,6 +26,9 @@ function App() {
   const cellClickHandler = (cell: FieldCell) => {
     //   dispatch(generateMines());
     dispatch(showCell(cell));
+    if (cell.type === "mine" && cell.show === "hide") {
+      dispatch(revealMines());
+    }
   };
 
   const cellRClickHandler = (cell: FieldCell) => {
@@ -32,7 +36,7 @@ function App() {
   };
   const newGameHandler = () => {
     dispatch(newGame());
-    dispatch(generateMines());
+    dispatch(generateField(cells[1]));
   };
 
   const fieldCells = cells.map((cell, index) => (
@@ -44,9 +48,7 @@ function App() {
         e.preventDefault();
         cellRClickHandler(cell);
       }}
-    >
-      {cell.type[0]}
-    </Cell>
+    ></Cell>
   ));
 
   return (
