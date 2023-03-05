@@ -76,7 +76,7 @@ export const Cell = styled.div<CellProps>`
             }
 
           default:
-            return iconsOffsets.FIELD_QUESTION_REVEALED;
+            return iconsOffsets.FIELD_MINE_ERROR;
         }
 
       default:

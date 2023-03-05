@@ -175,7 +175,7 @@ export const fieldCellsSlice = createSlice({
     },
     revealMines: (state) => {
       return state.map((el) =>
-        el.type === "mine" && el.block === "none" && el.show === "hide"
+        (el.type === "mine" && el.show === "hide") || el.block !== "none"
           ? { ...el, show: "reveal" }
           : el
       );
