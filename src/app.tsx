@@ -71,6 +71,10 @@ function App() {
 
   const cellRClickHandler = useCallback(
     (cell: FieldCell) => {
+      if (status === "newGame") {
+        dispatch(startGame(cell));
+      }
+
       if (status === "gameOver") return;
       dispatch(
         blockCell({
@@ -88,7 +92,7 @@ function App() {
   );
 
   const cellPrefireHandler = useCallback(
-    (cell: FieldCell) => {
+    (cell?: FieldCell) => {
       dispatch(prefireCell(cell));
     },
     [dispatch]
@@ -106,7 +110,8 @@ function App() {
           key={index}
           {...cell}
           onMouseDown={(e) => clickIsAllowed(e) && cellPrefireHandler(cell)}
-          onMouseOver={() => mouseDown && cellPrefireHandler(cell)}
+          onMouseLeave={() => mouseDown && cellPrefireHandler()}
+          onMouseEnter={() => mouseDown && cellPrefireHandler(cell)}
           onMouseUp={(e) => clickIsAllowed(e) && cellClickHandler(cell)}
           onContextMenu={(e) => {
             e.preventDefault();
