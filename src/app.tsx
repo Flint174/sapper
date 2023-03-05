@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import { useAppDispatch, useAppSelector } from "./hooks/use-store";
 import { startGame } from "./services/actions/game-actions";
@@ -49,6 +49,12 @@ function App() {
   } = useAppSelector((store) => store);
   const dispatch = useAppDispatch();
 
+  const clickIsAllowed = useCallback(
+    (e: React.MouseEvent<HTMLDivElement, MouseEvent>): boolean => {
+      return e.button === 0 && status !== "gameOver" && status !== "victory";
+    },
+    [status]
+  );
   const cellClickHandler = useCallback(
     (cell: FieldCell) => {
       if (status === "gameOver") return;
@@ -99,9 +105,9 @@ function App() {
         <Cell
           key={index}
           {...cell}
-          onMouseDown={() => cellPrefireHandler(cell)}
+          onMouseDown={(e) => clickIsAllowed(e) && cellPrefireHandler(cell)}
           onMouseOver={() => mouseDown && cellPrefireHandler(cell)}
-          onMouseUp={(e) => e.button === 0 && cellClickHandler(cell)}
+          onMouseUp={(e) => clickIsAllowed(e) && cellClickHandler(cell)}
           onContextMenu={(e) => {
             e.preventDefault();
             cellRClickHandler(cell);
