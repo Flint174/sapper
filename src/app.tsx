@@ -114,7 +114,14 @@ function App() {
           }}
         />
       )),
-    [cells, cellClickHandler, cellRClickHandler, mouseDown, cellPrefireHandler]
+    [
+      cells,
+      cellClickHandler,
+      cellRClickHandler,
+      mouseDown,
+      cellPrefireHandler,
+      clickIsAllowed,
+    ]
   );
 
   const minesAmount = useMemo(
