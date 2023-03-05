@@ -49,6 +49,11 @@ function App() {
   } = useAppSelector((store) => store);
   const dispatch = useAppDispatch();
 
+  const minesAmount = useMemo(
+    () => MINES_AMOUNT - cells.filter((cell) => cell.block === "flag").length,
+    [cells]
+  );
+
   const clickIsAllowed = useCallback(
     (e: React.MouseEvent<HTMLDivElement, MouseEvent>): boolean => {
       return e.button === 0 && status !== "gameOver" && status !== "victory";
@@ -76,6 +81,8 @@ function App() {
       }
 
       if (status === "gameOver") return;
+      console.log({ minesAmount, block: cell.block });
+      if (!minesAmount && cell.block === "none") return;
       dispatch(
         blockCell({
           cell,
@@ -88,7 +95,7 @@ function App() {
         })
       );
     },
-    [dispatch, status]
+    [dispatch, status, minesAmount]
   );
 
   const cellPrefireHandler = useCallback(
@@ -127,11 +134,6 @@ function App() {
       cellPrefireHandler,
       clickIsAllowed,
     ]
-  );
-
-  const minesAmount = useMemo(
-    () => cells.filter((cell) => cell.block === "flag").length,
-    [cells]
   );
 
   useEffect(() => {
@@ -178,13 +180,13 @@ function App() {
   return (
     <Container>
       <ToolBar>
-        <DigitsDisplay value={time} />
+        <DigitsDisplay value={minesAmount} />
         <PlayerButton
           onClick={newGameHandler}
           gameStatus={status}
           mouseDown={mouseDown}
         />
-        <DigitsDisplay value={minesAmount} />
+        <DigitsDisplay value={time} />
       </ToolBar>
       <GameField>{fieldCells}</GameField>
     </Container>
