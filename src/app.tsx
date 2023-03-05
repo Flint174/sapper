@@ -11,6 +11,7 @@ import {
 } from "./services/slices/field-cells-slice";
 import { gameOver, newPlayer, victory } from "./services/slices/player-slice";
 import { Cell } from "./ui";
+import { DigitsDisplay } from "./ui/digits-display";
 import { PlayerButton } from "./ui/player-button";
 import { FieldCell } from "./utils/cell-types";
 import { FieldDimentions, FIELD_SIZE, MINES_AMOUNT } from "./utils/game-config";
@@ -95,7 +96,7 @@ function App() {
           key={index}
           {...cell}
           mouseDown={mouseDown}
-          onMouseUp={() => cellClickHandler(cell)}
+          onMouseUp={(e) => e.button === 0 && cellClickHandler(cell)}
           onContextMenu={(e) => {
             e.preventDefault();
             cellRClickHandler(cell);
@@ -103,6 +104,11 @@ function App() {
         ></Cell>
       )),
     [cells, cellClickHandler, cellRClickHandler, mouseDown]
+  );
+
+  const minesAmount = useMemo(
+    () => cells.filter((cell) => cell.block === "flag").length,
+    [cells]
   );
 
   useEffect(() => {
@@ -122,8 +128,8 @@ function App() {
   }, [cells, dispatch, status]);
 
   useEffect(() => {
-    const mouseDownHandler = () => {
-      if (status === "inProgress" || status === "newGame") {
+    const mouseDownHandler = (e: MouseEvent) => {
+      if ((status === "inProgress" || status === "newGame") && e.button === 0) {
         setMouseDown(true);
       }
     };
@@ -142,13 +148,13 @@ function App() {
   return (
     <Container>
       <ToolBar>
-        <div>{time}</div>
+        <DigitsDisplay value={time} />
         <PlayerButton
           onClick={newGameHandler}
           gameStatus={status}
           mouseDown={mouseDown}
         />
-        <div>mines</div>
+        <DigitsDisplay value={minesAmount} />
       </ToolBar>
       <GameField>{fieldCells}</GameField>
     </Container>

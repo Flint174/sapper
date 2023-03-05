@@ -108,7 +108,6 @@ export const fieldCellsSlice = createSlice({
                 newState[el].show === "hide"
             )
           );
-          console.log({ index: cell.index, matrix });
         }
 
         shapeMatrix = new Set<number>(matrix);

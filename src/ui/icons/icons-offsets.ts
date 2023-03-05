@@ -4,11 +4,27 @@ export enum IconsOffsets {
   CELL_WIDTH = -17,
   PLAYER_ROW = -24,
   PLAYER_WIDTH = -27,
+  DIGIT_ROW = 0,
+  DIGIT_WIDTH = -14,
 }
 
 export const iconsOffsets = {
-  PLAYER_BASE: `0 ${IconsOffsets.PLAYER_ROW}px`,
-  PLAYER_PRESSED: `${IconsOffsets.PLAYER_WIDTH}px ${IconsOffsets.PLAYER_ROW}px`,
+  DIGIT_1: `${IconsOffsets.DIGIT_WIDTH * 0}px ${IconsOffsets.DIGIT_ROW}px`,
+  DIGIT_2: `${IconsOffsets.DIGIT_WIDTH * 1}px ${IconsOffsets.DIGIT_ROW}px`,
+  DIGIT_3: `${IconsOffsets.DIGIT_WIDTH * 2}px ${IconsOffsets.DIGIT_ROW}px`,
+  DIGIT_4: `${IconsOffsets.DIGIT_WIDTH * 3}px ${IconsOffsets.DIGIT_ROW}px`,
+  DIGIT_5: `${IconsOffsets.DIGIT_WIDTH * 4}px ${IconsOffsets.DIGIT_ROW}px`,
+  DIGIT_6: `${IconsOffsets.DIGIT_WIDTH * 5}px ${IconsOffsets.DIGIT_ROW}px`,
+  DIGIT_7: `${IconsOffsets.DIGIT_WIDTH * 6}px ${IconsOffsets.DIGIT_ROW}px`,
+  DIGIT_8: `${IconsOffsets.DIGIT_WIDTH * 7}px ${IconsOffsets.DIGIT_ROW}px`,
+  DIGIT_9: `${IconsOffsets.DIGIT_WIDTH * 8}px ${IconsOffsets.DIGIT_ROW}px`,
+  DIGIT_0: `${IconsOffsets.DIGIT_WIDTH * 9}px ${IconsOffsets.DIGIT_ROW}px`,
+  PLAYER_BASE: `${IconsOffsets.PLAYER_WIDTH * 0}px ${
+    IconsOffsets.PLAYER_ROW
+  }px`,
+  PLAYER_PRESSED: `${IconsOffsets.PLAYER_WIDTH * 1}px ${
+    IconsOffsets.PLAYER_ROW
+  }px`,
   PLAYER_SCARED: `${IconsOffsets.PLAYER_WIDTH * 2}px ${
     IconsOffsets.PLAYER_ROW
   }px`,
@@ -18,8 +34,8 @@ export const iconsOffsets = {
   PLAYER_GAME_OVER: `${IconsOffsets.PLAYER_WIDTH * 4}px ${
     IconsOffsets.PLAYER_ROW
   }px`,
-  FIELD_BASE: `0 ${IconsOffsets.CELL_ROW_1}px`,
-  FIELD_EMPTY: `${IconsOffsets.CELL_WIDTH}px ${IconsOffsets.CELL_ROW_1}px`,
+  FIELD_BASE: `${IconsOffsets.CELL_WIDTH * 0}px ${IconsOffsets.CELL_ROW_1}px`,
+  FIELD_EMPTY: `${IconsOffsets.CELL_WIDTH * 1}px ${IconsOffsets.CELL_ROW_1}px`,
   FIELD_FLAG: `${IconsOffsets.CELL_WIDTH * 2}px ${IconsOffsets.CELL_ROW_1}px`,
   FIELD_QUESTION: `${IconsOffsets.CELL_WIDTH * 3}px ${
     IconsOffsets.CELL_ROW_1
