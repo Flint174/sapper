@@ -3,7 +3,8 @@ import styled from "styled-components";
 import { FieldCell } from "../utils/cell-types";
 import { iconsOffsets } from "./icons/icons-offsets";
 
-type CellProps = FieldCell & { mouseDown: boolean };
+// type CellProps = FieldCell & { mouseDown: boolean };
+type CellProps = FieldCell;
 
 export const Cell = styled.div<CellProps>`
   margin: 0;
@@ -18,7 +19,9 @@ export const Cell = styled.div<CellProps>`
       case "hide":
         switch (p.block) {
           case "none":
-            return iconsOffsets.FIELD_BASE;
+            return p.prefire
+              ? iconsOffsets.FIELD_EMPTY
+              : iconsOffsets.FIELD_BASE;
           case "flag":
             return iconsOffsets.FIELD_FLAG;
           case "?":
@@ -80,8 +83,9 @@ export const Cell = styled.div<CellProps>`
         break;
     }
   }};
-  :hover {
+`;
+
+/* :hover {
     background-position: ${(p) =>
       p.show === "hide" && p.mouseDown ? iconsOffsets.FIELD_EMPTY : undefined};
-  }
-`;
+  } */

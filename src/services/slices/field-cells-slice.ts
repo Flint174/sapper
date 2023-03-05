@@ -6,15 +6,19 @@ import {
   MINES_AMOUNT,
 } from "../../utils/game-config";
 
+const getCellInitialState = (index: number): FieldCell => ({
+  index,
+  type: "empty",
+  show: "hide",
+  block: "none",
+  prefire: false,
+});
+
 const fieldCellsInitialState: FieldCell[] = Array.from(
   { length: FIELD_SIZE },
-  (_, index) => ({
-    index,
-    type: "empty",
-    show: "hide",
-    block: "none",
-  })
+  (_, index) => getCellInitialState(index)
 );
+
 const getMatrix = (index: number) => {
   return [
     [-1, -1],
@@ -57,10 +61,8 @@ export const fieldCellsSlice = createSlice({
       mines.forEach(
         (mine) =>
           (newState[mine] = {
-            index: mine,
+            ...getCellInitialState(mine),
             type: "mine",
-            show: "hide",
-            block: "none",
           })
       );
       // generate numbers
@@ -83,37 +85,60 @@ export const fieldCellsSlice = createSlice({
 
       if (cell.block !== "none") return state;
 
-      if (cell.type !== "empty") {
-        state.splice(cell.index, 1, { ...cell, show: "show" });
-        return;
-      }
+      const showMatrix = (
+        state: FieldCell[],
+        matrix: FieldCell[]
+      ): FieldCell[] => {
+        const newState: FieldCell[] = state.slice();
 
-      const newState: FieldCell[] = state.slice();
+        let shapeMatrix = new Set<number>(matrix.map((item) => item.index));
+        console.log(shapeMatrix);
 
-      let shapeMatrix = new Set<number>([cell.index]);
+        do {
+          shapeMatrix.forEach(
+            (item) => (newState[item] = { ...newState[item], show: "show" })
+          );
+          const matrix = [];
+          for (const i of Array.from(shapeMatrix).filter(
+            (item) => newState[item].type === "empty"
+          )) {
+            matrix.push(
+              ...getMatrix(i).filter(
+                (el) =>
+                  newState[el].block === "none" &&
+                  newState[el].type !== "mine" &&
+                  newState[el].show === "hide"
+              )
+            );
+          }
 
-      do {
-        shapeMatrix.forEach(
-          (item) => (newState[item] = { ...newState[item], show: "show" })
-        );
-        const matrix = [];
-        for (const i of Array.from(shapeMatrix).filter(
-          (item) => newState[item].type === "empty"
-        )) {
-          matrix.push(
-            ...getMatrix(i).filter(
-              (el) =>
-                newState[el].block === "none" &&
-                newState[el].type !== "mine" &&
-                newState[el].show === "hide"
+          shapeMatrix = new Set<number>(matrix);
+        } while (shapeMatrix.size);
+
+        return newState;
+      };
+
+      if (cell.show === "hide") {
+        console.log("hide");
+        if (cell.type !== "empty") {
+          console.log("not empty");
+          state.splice(cell.index, 1, { ...cell, show: "show" });
+        } else {
+          console.log("empty");
+          return showMatrix(state, [cell]);
+        }
+      } else if (cell.type === "number") {
+        const matrix = getMatrix(cell.index).map((item) => state[item]);
+        const mines = matrix.filter((item) => item.block === "flag");
+        if (cell.value === mines.length) {
+          return showMatrix(
+            state,
+            matrix.filter(
+              (item) => item.block === "none" && item.show === "hide"
             )
           );
         }
-
-        shapeMatrix = new Set<number>(matrix);
-      } while (shapeMatrix.size);
-
-      return newState;
+      }
     },
     blockCell: (
       state,
@@ -127,9 +152,7 @@ export const fieldCellsSlice = createSlice({
 
       state.splice(cell.index, 1, {
         ...cell,
-        block:
-          //   cell.block === "none" ? "flag" : cell.block === "flag" ? "?" : "none",
-          value,
+        block: value,
       });
     },
     blockCells: (
@@ -157,6 +180,30 @@ export const fieldCellsSlice = createSlice({
           : el
       );
     },
+    prefireCell: (state, action: PayloadAction<FieldCell | undefined>) => {
+      const { payload: cell } = action;
+
+      if (!cell) {
+        return state.map((item) => ({ ...item, prefire: false }));
+      }
+
+      if (cell.block === "none") {
+        if (cell.show === "hide") {
+          return state.map((item) =>
+            item.index === cell.index
+              ? { ...item, prefire: true }
+              : { ...item, prefire: false }
+          );
+        } else if (true) {
+          const matrix = getMatrix(cell.index);
+          const newState = state.map((item) => ({ ...item, prefire: false }));
+          matrix.forEach(
+            (item) => (newState[item] = { ...newState[item], prefire: true })
+          );
+          return newState;
+        }
+      }
+    },
   },
 });
 
@@ -167,5 +214,6 @@ export const {
   blockCell,
   blockCells,
   revealMines,
+  prefireCell,
 } = fieldCellsSlice.actions;
 export const fieldCellsReducer = fieldCellsSlice.reducer;

@@ -18,6 +18,7 @@ export interface CellMeta {
   index: number;
   show: "hide" | "show" | "reveal";
   block: BlockType;
+  prefire: boolean;
 }
 
 export type FieldCell = CellType & CellMeta;

@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import { useAppDispatch, useAppSelector } from "./hooks/use-store";
 import { startGame } from "./services/actions/game-actions";
 import {
   blockCell,
   blockCells,
   newField,
+  prefireCell,
   revealMines,
   showCell,
 } from "./services/slices/field-cells-slice";
@@ -56,12 +57,8 @@ function App() {
         dispatch(startGame(cell));
       }
 
+      dispatch(prefireCell());
       dispatch(showCell(cell));
-
-      if (cell.type === "mine" && cell.block === "none") {
-        dispatch(revealMines());
-        dispatch(gameOver());
-      }
     },
     [status, dispatch]
   );
@@ -84,6 +81,13 @@ function App() {
     [dispatch, status]
   );
 
+  const cellPrefireHandler = useCallback(
+    (cell: FieldCell) => {
+      dispatch(prefireCell(cell));
+    },
+    [dispatch]
+  );
+
   const newGameHandler = () => {
     dispatch(newField());
     dispatch(newPlayer());
@@ -95,15 +99,16 @@ function App() {
         <Cell
           key={index}
           {...cell}
-          mouseDown={mouseDown}
+          onMouseDown={() => cellPrefireHandler(cell)}
+          onMouseOver={() => mouseDown && cellPrefireHandler(cell)}
           onMouseUp={(e) => e.button === 0 && cellClickHandler(cell)}
           onContextMenu={(e) => {
             e.preventDefault();
             cellRClickHandler(cell);
           }}
-        ></Cell>
+        />
       )),
-    [cells, cellClickHandler, cellRClickHandler, mouseDown]
+    [cells, cellClickHandler, cellRClickHandler, mouseDown, cellPrefireHandler]
   );
 
   const minesAmount = useMemo(
@@ -113,6 +118,13 @@ function App() {
 
   useEffect(() => {
     if (status !== "inProgress") return;
+    if (
+      cells.filter((cell) => cell.type === "mine" && cell.show === "show")
+        .length
+    ) {
+      dispatch(gameOver());
+      dispatch(revealMines());
+    }
     if (
       cells.filter((cell) => cell.show === "show").length ===
       FIELD_SIZE - MINES_AMOUNT
