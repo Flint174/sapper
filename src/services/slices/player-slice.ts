@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { GameStatus } from "../../utils/game-types";
 
-export type GameStatus = "newGame" | "inProgress" | "gameOver" | "victory";
 export interface Player {
   time: number;
   timer: NodeJS.Timer | null;
