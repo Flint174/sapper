@@ -1,0 +1,12 @@
+{
+  "files": {
+    "main.js": "/sapper/static/js/main.c28d2b94.js",
+    "static/js/787.2f7b59f1.chunk.js": "/sapper/static/js/787.2f7b59f1.chunk.js",
+    "index.html": "/sapper/index.html",
+    "main.c28d2b94.js.map": "/sapper/static/js/main.c28d2b94.js.map",
+    "787.2f7b59f1.chunk.js.map": "/sapper/static/js/787.2f7b59f1.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/js/main.c28d2b94.js"
+  ]
+}
