@@ -6,7 +6,7 @@
 
 ## Стек
 
-1. Ract
+1. React
 1. Redux
 1. styled-components
 
