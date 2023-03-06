@@ -144,6 +144,7 @@ function App() {
     ) {
       dispatch(gameOver());
       dispatch(revealMines());
+      return;
     }
     if (
       cells.filter((cell) => cell.show === "show").length ===
